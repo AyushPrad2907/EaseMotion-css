@@ -1,0 +1,703 @@
+/* ============================================================
+   ease-dna-spin — EaseMotion CSS Utility
+   Premium DNA Helix Animation · Pure CSS · Zero Dependencies
+   ============================================================ */
+
+/* ── Custom Properties ──────────────────────────────────────── */
+:root {
+  --dna-bg:            #050810;
+  --dna-surface:       rgba(255, 255, 255, 0.04);
+  --dna-border:        rgba(100, 180, 255, 0.12);
+
+  --dna-blue-deep:     #0a1628;
+  --dna-blue-mid:      #1a3a6e;
+  --dna-blue-bright:   #3b82f6;
+  --dna-blue-glow:     #60a5fa;
+
+  --dna-purple-deep:   #1a0a28;
+  --dna-purple-mid:    #4c1d95;
+  --dna-purple-bright: #8b5cf6;
+  --dna-purple-glow:   #a78bfa;
+
+  --dna-cyan:          #06b6d4;
+  --dna-cyan-glow:     #22d3ee;
+  --dna-white:         #f0f8ff;
+  --dna-muted:         rgba(180, 210, 255, 0.5);
+
+  --dna-strand-w:      6px;
+  --dna-connector-h:   3px;
+  --dna-node-size:     14px;
+  --dna-gap:           28px;
+  --dna-helix-w:       120px;
+  --dna-helix-h:       480px;
+  --dna-count:         14;        /* number of rungs */
+
+  --dna-duration:      4s;
+  --dna-ease:          cubic-bezier(0.45, 0, 0.55, 1);
+
+  --font-display: 'Courier New', 'Lucida Console', monospace;
+  --font-body:    system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* ── Reset & Base ───────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--dna-bg);
+  color: var(--dna-white);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+/* ── Background Gradient Atmosphere ────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%,  rgba(59,  130, 246, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 90%,  rgba(139, 92,  246, 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 50% 50%,  rgba(6,  182, 212, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Page Layout ────────────────────────────────────────────── */
+.page-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1100px;
+  padding: 60px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.page-header {
+  text-align: center;
+  animation: em-fade-up 0.9s var(--dna-ease) both;
+}
+
+.page-header .eyebrow {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dna-cyan);
+  background: rgba(6, 182, 212, 0.08);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  background: linear-gradient(135deg, var(--dna-blue-glow) 0%, var(--dna-cyan-glow) 40%, var(--dna-purple-glow) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 14px;
+}
+
+.page-header p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--dna-muted);
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ── Section Labels ─────────────────────────────────────────── */
+.section-label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dna-muted);
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+/* ── Demo Grid ──────────────────────────────────────────────── */
+.demo-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  animation: em-fade-up 1s 0.2s var(--dna-ease) both;
+}
+
+/* ── Demo Card (Glassmorphism) ──────────────────────────────── */
+.demo-card {
+  background: var(--dna-surface);
+  border: 1px solid var(--dna-border);
+  border-radius: 24px;
+  padding: 40px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 2px 1px rgba(255,255,255,0.03) inset,
+    0 20px 60px rgba(0, 0, 0, 0.4);
+  transition: transform 0.35s var(--dna-ease),
+              box-shadow 0.35s var(--dna-ease),
+              border-color 0.35s var(--dna-ease);
+}
+
+.demo-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(100, 180, 255, 0.28);
+  box-shadow:
+    0 2px 1px rgba(255,255,255,0.05) inset,
+    0 32px 80px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(59, 130, 246, 0.08);
+}
+
+.demo-card-label {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--dna-cyan);
+  background: rgba(6, 182, 212, 0.07);
+  border: 1px solid rgba(6, 182, 212, 0.18);
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+
+/* ── Composable Row ─────────────────────────────────────────── */
+.compose-row {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 48px;
+  animation: em-fade-up 1s 0.4s var(--dna-ease) both;
+}
+
+/* ── Compose Card ───────────────────────────────────────────── */
+.compose-card {
+  background: var(--dna-surface);
+  border: 1px solid var(--dna-border);
+  border-radius: 20px;
+  padding: 36px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  min-width: 200px;
+}
+
+/* ── Utility Badge ──────────────────────────────────────────── */
+.utility-badge {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--dna-purple-glow);
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+/* ── Code Snippet Block ─────────────────────────────────────── */
+.code-block {
+  width: 100%;
+  max-width: 640px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(100, 180, 255, 0.1);
+  border-radius: 14px;
+  padding: 20px 24px;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: rgba(180, 220, 255, 0.7);
+  overflow-x: auto;
+  animation: em-fade-up 1s 0.6s var(--dna-ease) both;
+}
+
+.code-block .tok-class  { color: var(--dna-cyan-glow); }
+.code-block .tok-attr   { color: var(--dna-purple-glow); }
+.code-block .tok-string { color: var(--dna-blue-glow); }
+.code-block .tok-tag    { color: rgba(180, 220, 255, 0.45); }
+
+/* ══════════════════════════════════════════════════════════════
+   DNA HELIX COMPONENT — .ease-dna-spin
+   ══════════════════════════════════════════════════════════════ */
+
+.ease-dna-spin {
+  position: relative;
+  width: var(--dna-helix-w);
+  height: var(--dna-helix-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  /* Entrance */
+  animation: em-fade-in 0.8s var(--dna-ease) both;
+}
+
+/* ── Ambient glow halo behind the helix ─────────────────────── */
+.ease-dna-spin::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(
+    ellipse 60% 80% at 50% 50%,
+    rgba(59, 130, 246, 0.12) 0%,
+    rgba(139, 92, 246, 0.08) 50%,
+    transparent 75%
+  );
+  border-radius: 50%;
+  animation: em-glow-pulse var(--dna-duration) var(--dna-ease) infinite;
+  pointer-events: none;
+}
+
+/* ── The Helix Track ────────────────────────────────────────── */
+.dna-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Both Strands Base ──────────────────────────────────────── */
+.dna-strand {
+  position: absolute;
+  top: 0;
+  width: var(--dna-strand-w);
+  height: 100%;
+  border-radius: 100px;
+}
+
+/* Left strand */
+.dna-strand-left {
+  left: calc(50% - 52px - var(--dna-strand-w) / 2);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(59, 130, 246, 0.15) 8%,
+    rgba(59, 130, 246, 0.6) 30%,
+    var(--dna-blue-bright) 50%,
+    rgba(59, 130, 246, 0.6) 70%,
+    rgba(59, 130, 246, 0.15) 92%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 10px rgba(59, 130, 246, 0.4),
+    0 0 30px rgba(59, 130, 246, 0.15);
+  animation: em-strand-float var(--dna-duration) var(--dna-ease) infinite;
+}
+
+/* Right strand */
+.dna-strand-right {
+  right: calc(50% - 52px - var(--dna-strand-w) / 2);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(139, 92, 246, 0.15) 8%,
+    rgba(139, 92, 246, 0.6) 30%,
+    var(--dna-purple-bright) 50%,
+    rgba(139, 92, 246, 0.6) 70%,
+    rgba(139, 92, 246, 0.15) 92%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 10px rgba(139, 92, 246, 0.4),
+    0 0 30px rgba(139, 92, 246, 0.15);
+  animation: em-strand-float var(--dna-duration) var(--dna-ease) infinite;
+  animation-delay: calc(var(--dna-duration) / 2);
+}
+
+/* ── Connectors Container ───────────────────────────────────── */
+.dna-connectors {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 104px;
+  height: 100%;
+}
+
+/* ── Individual Rung ────────────────────────────────────────── */
+.dna-rung {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--dna-connector-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Position each rung evenly */
+.dna-rung:nth-child(1)  { top: calc(1  * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(2)  { top: calc(2  * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(3)  { top: calc(3  * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(4)  { top: calc(4  * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(5)  { top: calc(5  * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(6)  { top: calc(6  * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(7)  { top: calc(7  * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(8)  { top: calc(8  * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(9)  { top: calc(9  * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(10) { top: calc(10 * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(11) { top: calc(11 * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(12) { top: calc(12 * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(13) { top: calc(13 * (100% / (var(--dna-count) + 1))); }
+.dna-rung:nth-child(14) { top: calc(14 * (100% / (var(--dna-count) + 1))); }
+
+/* Connector bar inside each rung */
+.dna-rung-bar {
+  flex: 1;
+  height: 100%;
+  border-radius: 100px;
+  transform-origin: center center;
+}
+
+/* Node dots at each end of the rung */
+.dna-node {
+  width: var(--dna-node-size);
+  height: var(--dna-node-size);
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.dna-node::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+/* Alternating colour pattern for nodes and bars */
+.dna-rung:nth-child(odd) .dna-node {
+  background: radial-gradient(circle at 35% 35%, var(--dna-cyan-glow), var(--dna-cyan));
+  box-shadow:
+    0 0 8px var(--dna-cyan),
+    0 0 20px rgba(6, 182, 212, 0.5);
+}
+.dna-rung:nth-child(odd) .dna-node::after {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.3), transparent 70%);
+}
+.dna-rung:nth-child(odd) .dna-rung-bar {
+  background: linear-gradient(90deg, var(--dna-cyan) 0%, rgba(6, 182, 212, 0.4) 50%, var(--dna-cyan) 100%);
+  box-shadow: 0 0 6px rgba(6, 182, 212, 0.4);
+}
+
+.dna-rung:nth-child(even) .dna-node {
+  background: radial-gradient(circle at 35% 35%, var(--dna-purple-glow), var(--dna-purple-bright));
+  box-shadow:
+    0 0 8px var(--dna-purple-bright),
+    0 0 20px rgba(139, 92, 246, 0.5);
+}
+.dna-rung:nth-child(even) .dna-node::after {
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent 70%);
+}
+.dna-rung:nth-child(even) .dna-rung-bar {
+  background: linear-gradient(90deg, var(--dna-purple-bright) 0%, rgba(139, 92, 246, 0.4) 50%, var(--dna-purple-bright) 100%);
+  box-shadow: 0 0 6px rgba(139, 92, 246, 0.4);
+}
+
+/* Every 3rd is blue for visual rhythm */
+.dna-rung:nth-child(3n) .dna-node {
+  background: radial-gradient(circle at 35% 35%, var(--dna-blue-glow), var(--dna-blue-bright));
+  box-shadow:
+    0 0 8px var(--dna-blue-bright),
+    0 0 20px rgba(59, 130, 246, 0.5);
+}
+.dna-rung:nth-child(3n) .dna-node::after {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.3), transparent 70%);
+}
+.dna-rung:nth-child(3n) .dna-rung-bar {
+  background: linear-gradient(90deg, var(--dna-blue-bright) 0%, rgba(59, 130, 246, 0.4) 50%, var(--dna-blue-bright) 100%);
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
+}
+
+/* ── Depth / Twist Simulation via staggered scaleX ─────────── */
+/* Each rung compresses and expands at different phase to fake
+   the helical rotation without perspective transforms        */
+
+.dna-rung:nth-child(1)  { animation: em-rung-twist var(--dna-duration) calc( 0   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(2)  { animation: em-rung-twist var(--dna-duration) calc( 1   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(3)  { animation: em-rung-twist var(--dna-duration) calc( 2   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(4)  { animation: em-rung-twist var(--dna-duration) calc( 3   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(5)  { animation: em-rung-twist var(--dna-duration) calc( 4   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(6)  { animation: em-rung-twist var(--dna-duration) calc( 5   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(7)  { animation: em-rung-twist var(--dna-duration) calc( 6   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(8)  { animation: em-rung-twist var(--dna-duration) calc( 7   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(9)  { animation: em-rung-twist var(--dna-duration) calc( 8   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(10) { animation: em-rung-twist var(--dna-duration) calc( 9   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(11) { animation: em-rung-twist var(--dna-duration) calc(10   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(12) { animation: em-rung-twist var(--dna-duration) calc(11   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(13) { animation: em-rung-twist var(--dna-duration) calc(12   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+.dna-rung:nth-child(14) { animation: em-rung-twist var(--dna-duration) calc(13   * var(--dna-duration) / var(--dna-count)) var(--dna-ease) infinite; }
+
+/* ── Floating wrapper animation ─────────────────────────────── */
+.dna-track {
+  animation: em-float 6s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   UTILITY VARIANTS
+   ══════════════════════════════════════════════════════════════ */
+
+/* .ease-dna-fast — 2× speed */
+.ease-dna-fast .dna-track         { animation-duration: 3s; }
+.ease-dna-fast .dna-strand-left,
+.ease-dna-fast .dna-strand-right  { animation-duration: 2s; }
+.ease-dna-fast .dna-rung          { animation-duration: 2s; }
+.ease-dna-fast::before            { animation-duration: 2s; }
+
+/* .ease-dna-slow — 0.5× speed */
+.ease-dna-slow .dna-track         { animation-duration: 10s; }
+.ease-dna-slow .dna-strand-left,
+.ease-dna-slow .dna-strand-right  { animation-duration: 8s; }
+.ease-dna-slow .dna-rung          { animation-duration: 8s; }
+.ease-dna-slow::before            { animation-duration: 8s; }
+
+/* .ease-dna-large — 1.6× size */
+.ease-dna-large {
+  --dna-helix-w:    192px;
+  --dna-helix-h:    768px;
+  --dna-node-size:  18px;
+  --dna-strand-w:   8px;
+  --dna-connector-h: 4px;
+}
+
+/* .ease-dna-mini — 0.5× size */
+.ease-dna-mini {
+  --dna-helix-w:    64px;
+  --dna-helix-h:    256px;
+  --dna-node-size:  8px;
+  --dna-strand-w:   4px;
+  --dna-connector-h: 2px;
+}
+
+/* .ease-dna-glow — amplified glow */
+.ease-dna-glow .dna-strand-left {
+  box-shadow:
+    0 0 16px rgba(59, 130, 246, 0.8),
+    0 0 48px rgba(59, 130, 246, 0.4),
+    0 0 80px rgba(59, 130, 246, 0.2);
+}
+.ease-dna-glow .dna-strand-right {
+  box-shadow:
+    0 0 16px rgba(139, 92, 246, 0.8),
+    0 0 48px rgba(139, 92, 246, 0.4),
+    0 0 80px rgba(139, 92, 246, 0.2);
+}
+.ease-dna-glow .dna-rung:nth-child(odd) .dna-node {
+  box-shadow: 0 0 14px var(--dna-cyan), 0 0 36px rgba(6, 182, 212, 0.7);
+}
+.ease-dna-glow .dna-rung:nth-child(even) .dna-node {
+  box-shadow: 0 0 14px var(--dna-purple-bright), 0 0 36px rgba(139, 92, 246, 0.7);
+}
+.ease-dna-glow::before {
+  background: radial-gradient(
+    ellipse 70% 90% at 50% 50%,
+    rgba(59, 130, 246, 0.22) 0%,
+    rgba(139, 92, 246, 0.15) 50%,
+    transparent 75%
+  );
+}
+
+/* .ease-dna-hover — extra enhancement on hover */
+.ease-dna-hover {
+  cursor: pointer;
+  transition: transform 0.4s var(--dna-ease);
+}
+.ease-dna-hover:hover {
+  transform: scale(1.08);
+}
+.ease-dna-hover:hover .dna-strand-left {
+  box-shadow:
+    0 0 20px rgba(59, 130, 246, 0.9),
+    0 0 60px rgba(59, 130, 246, 0.35);
+}
+.ease-dna-hover:hover .dna-strand-right {
+  box-shadow:
+    0 0 20px rgba(139, 92, 246, 0.9),
+    0 0 60px rgba(139, 92, 246, 0.35);
+}
+.ease-dna-hover:hover::before {
+  background: radial-gradient(
+    ellipse 75% 90% at 50% 50%,
+    rgba(59, 130, 246, 0.2) 0%,
+    rgba(139, 92, 246, 0.16) 50%,
+    transparent 75%
+  );
+}
+.ease-dna-hover:hover .dna-rung:nth-child(odd) .dna-node {
+  box-shadow: 0 0 18px var(--dna-cyan), 0 0 48px rgba(6, 182, 212, 0.6);
+}
+.ease-dna-hover:hover .dna-rung:nth-child(even) .dna-node {
+  box-shadow: 0 0 18px var(--dna-purple-bright), 0 0 48px rgba(139, 92, 246, 0.6);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+   ══════════════════════════════════════════════════════════════ */
+
+/* Helix twist illusion: each rung scales in X through a full cycle.
+   The depth dimension uses opacity so back-facing rungs fade.       */
+@keyframes em-rung-twist {
+  0%   { transform: scaleX(1);     opacity: 1; }
+  25%  { transform: scaleX(0.55);  opacity: 0.65; }
+  50%  { transform: scaleX(0.08);  opacity: 0.25; }
+  75%  { transform: scaleX(0.55);  opacity: 0.65; }
+  100% { transform: scaleX(1);     opacity: 1; }
+}
+
+/* Gentle floating bob */
+@keyframes em-float {
+  0%,  100% { transform: translateY(0px); }
+  50%        { transform: translateY(-10px); }
+}
+
+/* Strand subtle breathing */
+@keyframes em-strand-float {
+  0%,  100% { opacity: 0.9; }
+  50%        { opacity: 1; }
+}
+
+/* Halo glow pulse */
+@keyframes em-glow-pulse {
+  0%,  100% { opacity: 0.6; transform: scale(1); }
+  50%        { opacity: 1;   transform: scale(1.06); }
+}
+
+/* Entrance: fade + rise */
+@keyframes em-fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Page element entrance */
+@keyframes em-fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════════════════════════ */
+
+.page-footer {
+  width: 100%;
+  text-align: center;
+  padding: 32px 0 8px;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: rgba(100, 150, 200, 0.35);
+  border-top: 1px solid rgba(100, 180, 255, 0.06);
+  animation: em-fade-up 1s 0.8s var(--dna-ease) both;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  :root {
+    --dna-helix-h: 360px;
+    --dna-helix-w: 96px;
+    --dna-node-size: 11px;
+  }
+
+  .page-wrapper {
+    padding: 40px 16px 60px;
+    gap: 56px;
+  }
+
+  .demo-grid {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .compose-row {
+    gap: 32px;
+  }
+
+  .compose-card {
+    min-width: 160px;
+    padding: 28px 18px 22px;
+  }
+
+  .code-block {
+    font-size: 0.72rem;
+    padding: 16px 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --dna-helix-h: 300px;
+    --dna-helix-w: 80px;
+    --dna-node-size: 10px;
+    --dna-strand-w: 5px;
+  }
+
+  .page-header h1 {
+    font-size: 1.6rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ACCESSIBILITY — Reduced Motion
+   ══════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
+
+  .ease-dna-spin,
+  .ease-dna-spin::before,
+  .dna-track,
+  .dna-strand-left,
+  .dna-strand-right,
+  .dna-rung {
+    animation: none !important;
+  }
+
+  .ease-dna-hover:hover {
+    transform: none;
+  }
+}
