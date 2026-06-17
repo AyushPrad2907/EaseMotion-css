@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Request Flow — EaseMotion CSS</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <header class="dashboard-header">
+    <div class="header-brand">
+      <div class="header-logo">EM</div>
+      <div>
+        <div class="header-title">API Infrastructure Monitor</div>
+        <div class="header-sub">Real-time request flow · Production environment</div>
+      </div>
+    </div>
+    <div class="header-badges">
+      <span class="badge"><span class="badge-dot"></span>All systems operational</span>
+      <span class="badge">v2.4.1</span>
+      <span class="badge">us-east-1</span>
+    </div>
+  </header>
+
+  <!-- ── Metrics ────────────────────────────────────────────── -->
+  <div class="metrics">
+    <div class="metric-card mc-cyan">
+      <div class="metric-label">Requests / sec</div>
+      <div class="metric-value">3,847</div>
+      <div class="metric-sub">↑ 12% vs yesterday</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="metric-label">Success rate</div>
+      <div class="metric-value">99.7%</div>
+      <div class="metric-sub">p99 latency: 142ms</div>
+    </div>
+    <div class="metric-card mc-violet">
+      <div class="metric-label">Active connections</div>
+      <div class="metric-value">1,204</div>
+      <div class="metric-sub">Peak today: 1,891</div>
+    </div>
+    <div class="metric-card mc-amber">
+      <div class="metric-label">DB query avg</div>
+      <div class="metric-value">8.3ms</div>
+      <div class="metric-sub">Cache hit: 94.1%</div>
+    </div>
+  </div>
+
+  <!-- ── API Flow ────────────────────────────────────────────── -->
+  <div class="api-flow">
+    <div class="flow-label">Request Path</div>
+
+    <!-- SVG connector lines (decorative, screenreader-hidden) -->
+    <svg class="flow-connections" aria-hidden="true" preserveAspectRatio="none">
+      <defs>
+        <filter id="glow-filter" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2.5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Line 1: Client → Gateway (row 1, roughly col 1 centre → col 2 centre) -->
+      <g class="conn-1">
+        <line class="conn-line" x1="18%" y1="28%" x2="36%" y2="28%"/>
+        <line class="conn-glow" x1="18%" y1="28%" x2="36%" y2="28%" filter="url(#glow-filter)"/>
+      </g>
+
+      <!-- Line 2: Gateway → App Server -->
+      <g class="conn-2">
+        <line class="conn-line" x1="52%" y1="28%" x2="70%" y2="28%"/>
+        <line class="conn-glow" x1="52%" y1="28%" x2="70%" y2="28%" filter="url(#glow-filter)"/>
+      </g>
+
+      <!-- Line 3: App Server → Database (diagonal right-to-centre, down) -->
+      <g class="conn-3">
+        <line class="conn-line" x1="83%" y1="38%" x2="50%" y2="68%"/>
+        <line class="conn-glow" x1="83%" y1="38%" x2="50%" y2="68%" filter="url(#glow-filter)"/>
+      </g>
+
+      <!-- Line 4: App Server → External Service (straight down) -->
+      <g class="conn-4">
+        <line class="conn-line" x1="83%" y1="38%" x2="83%" y2="68%"/>
+        <line class="conn-glow" x1="83%" y1="38%" x2="83%" y2="68%" filter="url(#glow-filter)"/>
+      </g>
+
+      <!-- Line 5: Database → App Server (return, offset slightly) -->
+      <g class="conn-5">
+        <line class="conn-line" x1="54%" y1="68%" x2="79%" y2="38%"/>
+        <line class="conn-glow" x1="54%" y1="68%" x2="79%" y2="38%" filter="url(#glow-filter)"/>
+      </g>
+
+      <!-- Line 6: App Server → Client (response, offset lower) -->
+      <g class="conn-6">
+        <line class="conn-line" x1="70%" y1="33%" x2="18%" y2="33%"/>
+        <line class="conn-glow" x1="70%" y1="33%" x2="18%" y2="33%" filter="url(#glow-filter)"/>
+      </g>
+    </svg>
+
+    <!-- Animated data packets -->
+    <div class="packet packet-c-gw"   aria-hidden="true"></div>
+    <div class="packet packet-gw-app" aria-hidden="true"></div>
+    <div class="packet packet-app-db" aria-hidden="true"></div>
+    <div class="packet packet-app-ext"aria-hidden="true"></div>
+    <div class="packet packet-db-app" aria-hidden="true"></div>
+    <div class="packet packet-app-c"  aria-hidden="true"></div>
+
+    <!-- Flow nodes -->
+    <div class="flow-grid">
+
+      <!-- Client -->
+      <article class="flow-node flow-client" aria-label="Client">
+        <div class="node-icon" aria-hidden="true">🖥</div>
+        <div class="node-name">Client</div>
+        <div class="node-role">Browser / Mobile App</div>
+        <div class="node-status"><span class="status-dot"></span>Connected</div>
+      </article>
+
+      <!-- API Gateway -->
+      <article class="flow-node flow-gateway" aria-label="API Gateway">
+        <div class="node-icon" aria-hidden="true">🔀</div>
+        <div class="node-name">API Gateway</div>
+        <div class="node-role">Auth · Rate limit · Route</div>
+        <div class="node-status"><span class="status-dot"></span>Active</div>
+      </article>
+
+      <!-- Application Server -->
+      <article class="flow-node flow-appserver" aria-label="Application Server">
+        <div class="node-icon" aria-hidden="true">⚙️</div>
+        <div class="node-name">App Server</div>
+        <div class="node-role">Business logic · Orchestration</div>
+        <div class="node-status"><span class="status-dot"></span>Running</div>
+      </article>
+
+      <!-- Database -->
+      <article class="flow-node flow-database" aria-label="Database">
+        <div class="node-icon" aria-hidden="true">🗄</div>
+        <div class="node-name">Database</div>
+        <div class="node-role">PostgreSQL · Redis cache</div>
+        <div class="node-status"><span class="status-dot"></span>Healthy</div>
+      </article>
+
+      <!-- External Service -->
+      <article class="flow-node flow-external" aria-label="External Service">
+        <div class="node-icon" aria-hidden="true">🌐</div>
+        <div class="node-name">External API</div>
+        <div class="node-role">Payment · Email · Storage</div>
+        <div class="node-status"><span class="status-dot"></span>Online</div>
+      </article>
+
+    </div><!-- /flow-grid -->
+
+    <!-- Legend -->
+    <div class="flow-legend" aria-label="Connection legend">
+      <div class="legend-item"><span class="legend-line ll-req"></span>Request flow</div>
+      <div class="legend-item"><span class="legend-line ll-resp"></span>Response</div>
+      <div class="legend-item"><span class="legend-line ll-data"></span>DB query</div>
+      <div class="legend-item"><span class="legend-line ll-ext"></span>External call</div>
+    </div>
+
+  </div><!-- /api-flow -->
+
+  <!-- ── Activity Log ───────────────────────────────────────── -->
+  <div class="activity-log" aria-label="Recent request log">
+    <div class="log-header">
+      <span class="log-title">Live Requests</span>
+      <span class="log-live"><span class="badge-dot"></span>Streaming</span>
+    </div>
+    <div class="log-entries" role="log" aria-live="polite">
+      <div class="log-entry">
+        <span class="log-time">14:22:08.341</span>
+        <span class="log-method m-get">GET</span>
+        <span class="log-path">/api/v2/users/profile</span>
+        <span class="log-status s-200">200 OK</span>
+        <span class="log-dur">38ms</span>
+      </div>
+      <div class="log-entry">
+        <span class="log-time">14:22:08.197</span>
+        <span class="log-method m-post">POST</span>
+        <span class="log-path">/api/v2/orders</span>
+        <span class="log-status s-201">201 Created</span>
+        <span class="log-dur">142ms</span>
+      </div>
+      <div class="log-entry">
+        <span class="log-time">14:22:07.852</span>
+        <span class="log-method m-get">GET</span>
+        <span class="log-path">/api/v2/products?limit=20</span>
+        <span class="log-status s-200">200 OK</span>
+        <span class="log-dur">21ms</span>
+      </div>
+      <div class="log-entry">
+        <span class="log-time">14:22:07.611</span>
+        <span class="log-method m-put">PUT</span>
+        <span class="log-path">/api/v2/users/settings</span>
+        <span class="log-status s-200">200 OK</span>
+        <span class="log-dur">57ms</span>
+      </div>
+      <div class="log-entry">
+        <span class="log-time">14:22:07.409</span>
+        <span class="log-method m-del">DEL</span>
+        <span class="log-path">/api/v2/sessions/tk_9f2e</span>
+        <span class="log-status s-204">204 No Content</span>
+        <span class="log-dur">15ms</span>
+      </div>
+      <div class="log-entry">
+        <span class="log-time">14:22:07.103</span>
+        <span class="log-method m-post">POST</span>
+        <span class="log-path">/api/v2/payments/charge</span>
+        <span class="log-status s-200">200 OK</span>
+        <span class="log-dur">289ms</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="dashboard-footer">
+    EaseMotion CSS · Pure HTML &amp; CSS · No JavaScript · No external libraries
+  </footer>
+
+</div><!-- /dashboard -->
+
+</body>
+</html>
